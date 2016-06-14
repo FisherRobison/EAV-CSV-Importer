@@ -89,7 +89,7 @@ namespace Spright.Web.Classes.Processes.EAV
 
                 System.Diagnostics.Debug.WriteLine("File extracted!  =)");
 
-                //////Calls the Process CSV once Download and Unzip is done//////
+                
                 AdminImportRequestModel Model = new AdminImportRequestModel();
                 Model.FilePath = destinationFolder;
                 Model.EntityId = Int32.Parse(ConfigService.AutoDealioEntityID);
