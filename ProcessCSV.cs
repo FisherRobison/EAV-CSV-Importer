@@ -51,7 +51,7 @@ namespace Spright.Web.Classes.Processes.EAV
 
                     foreach (var record in records)
                     {
-                        if (record == null) //<--|| 
+                        if (record == null)
                         {
                             break;
                         }
