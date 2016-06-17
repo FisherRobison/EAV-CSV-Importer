@@ -17,6 +17,8 @@ namespace Spright.Web.Classes.Processes.EAV
 {
     public class ProcessCSV
     {
+        //Injecting our services that we are going to need in this class
+        
         public IRecordServices _recordService { get; set; }
         public IEntityServices _entityService { get; set; }
         private AdminImportRequestModel _AdminImport { get; set; }
@@ -29,12 +31,13 @@ namespace Spright.Web.Classes.Processes.EAV
             _InsertRecord = insertRecord;
 
         }
-
+    
         public Task<int> parseCSV(AdminImportRequestModel model)
         {
             return Task.Run(() =>
             {
-
+                //Use downloadDate because when the file gets downloaded it is saved by date and then this function runs
+                //Directly after the file has been downloaded
                 String downloadDate = DateTime.Now.ToString("dd.MM.yyyy");
                 string destination = AppDomain.CurrentDomain.BaseDirectory + "dtc/" + downloadDate + "/dtcinventory.txt";
                 _AdminImport = model;
@@ -55,6 +58,7 @@ namespace Spright.Web.Classes.Processes.EAV
                         {
                             break;
                         }
+                //Im making a new instance of RRM which is going to get passed in at the end
                         RecordRequestModel RRM = new RecordRequestModel();
                         RRM.EntityId = this._AdminImport.EntityId;
                         RRM.WebsiteId = this._AdminImport.WebsiteId;
@@ -83,7 +87,8 @@ namespace Spright.Web.Classes.Processes.EAV
                             }
                         }
 
-
+                //Within the CSV there are numbers seperated by pipes which are the img number
+                //Here we seperate them on the pipe and insert them into the url
                         if (record.Images != null)
                         {
                             string[] RecordMediaArray = record.Images.Split('|');
@@ -95,6 +100,7 @@ namespace Spright.Web.Classes.Processes.EAV
                                 RecordMedia.MediaType = "3";
                                 RecordMedia.FileType = "image/jpeg";
                                 System.Diagnostics.Debug.WriteLine(RecordMedia.FileName);
+                    //Setting first image equal to the cover photo
                                 if (x == 0)
                                 {
                                     RecordMedia.IsCoverPhoto = true;
@@ -109,6 +115,7 @@ namespace Spright.Web.Classes.Processes.EAV
                                 x++;
                             }
                         }
+                        //The RRM final gets inserted into the ProcessAsync Task
                         _InsertRecord.ProcessAsync(RRM);
                     }
                 }
